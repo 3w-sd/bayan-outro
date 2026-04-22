@@ -199,6 +199,14 @@ html, body {
   box-shadow: 0 0 30px rgba(201,168,76,0.15);
   position: relative;
   overflow: hidden;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.8s ease;
+}
+
+.photo-placeholder.zoomed {
+  transform: scale(1.4);
+  box-shadow: 0 0 50px var(--gold-glow);
+  border-color: var(--gold-light);
+  z-index: 10;
 }
 
 .photo-placeholder::before {
@@ -626,7 +634,7 @@ html, body {
       Or remove the placeholder entirely if you prefer text-only
     -->
     <div class="photo-placeholder" data-initials="BA" style="width:90px;height:90px;font-size:22px;">
-      <img src="awn.jpg" class="member-photo" alt="Us. Basil Alwali">
+      <img src="basil.jpg" class="member-photo" alt="Us. Basil Alwali">
     </div>
     <div class="supervisor-name">Us. Basil Alwali</div>
     <div class="member-role" style="margin-top:8px">Faculty Supervisor</div>
@@ -764,6 +772,25 @@ for (let i = 0; i < 220; i++) {
   `;
   bg.appendChild(s);
 }
+
+/* ── Photo Zoom Logic ── */
+const zoomObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('zoomed');
+    } else {
+      entry.target.classList.remove('zoomed');
+    }
+  });
+}, {
+  root: null,
+  rootMargin: '-45% 0% -45% 0%', // Target the center 10% of the screen
+  threshold: 0
+});
+
+document.querySelectorAll('.photo-placeholder').forEach(photo => {
+  zoomObserver.observe(photo);
+});
 </script>
 </body>
 </html>
