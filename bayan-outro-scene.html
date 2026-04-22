@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bayan – Outro</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cinzel+Decorative:wght@400;700&family=Cairo:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --gold: #C9A84C;
+  --gold-light: #F0D080;
+  --gold-dim: #D4C491;
+  --gold-glow: rgba(201,168,76,0.4);
+  --black: #000;
+  --off-white: #EDE8DC;
+  --dim: #BDB7AB;
+}
+
+html, body {
+  width: 1920px; height: 1080px;
+  overflow: hidden;
+  background: #000;
+  color: var(--off-white);
+  font-family: 'Cairo', sans-serif;
+  cursor: none;
+}
+
+/* ══════════════════════════════
+   BACKGROUND — starfield + noise
+══════════════════════════════ */
+#bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 120% 80% at 50% 110%, #1a1200 0%, #000 60%);
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  animation: twinkle var(--d) ease-in-out infinite var(--delay);
+}
+
+/* Horizontal light sweep across mid */
+#light-sweep {
+  position: absolute;
+  top: 35%; left: -30%;
+  width: 160%; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold-dim) 30%, var(--gold) 50%, var(--gold-dim) 70%, transparent 100%);
+  opacity: 0;
+  animation: sweep 6s 1.5s ease-in-out forwards;
+}
+
+/* ══════════════════════════════
+   OPENING TITLE BLOCK
+══════════════════════════════ */
+#title-block {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  animation: title-enter 2s 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+  z-index: 10;
+}
+
+.title-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.5em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  animation: fade-in-up 1s 1s both;
+}
+
+.title-main {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 96px;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-shadow:
+    0 0 40px rgba(201,168,76,0.8),
+    0 0 120px rgba(201,168,76,0.3),
+    0 2px 4px rgba(0,0,0,0.8);
+  line-height: 1;
+  letter-spacing: 0.12em;
+}
+
+.title-arabic {
+  font-family: 'Cairo', sans-serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: rgba(240,208,128,0.9);
+  letter-spacing: 0.3em;
+  margin-top: 14px;
+  direction: rtl;
+}
+
+.title-rule {
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 24px auto;
+  animation: rule-expand 1s 1.8s ease-out forwards;
+}
+
+.title-subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.35em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fade-in 1s 2.2s both;
+}
+
+/* ══════════════════════════════
+   CREDITS SCROLL
+══════════════════════════════ */
+#credits-wrapper {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  animation: credits-appear 1s 3s both;
+  z-index: 20;
+  /* Title block fades out just before */
+}
+
+#credits-track {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  text-align: center;
+  animation: credits-roll 35s 3.5s linear forwards;
+  padding-bottom: 200px;
+}
+
+/* Section separator */
+.credits-section {
+  margin-bottom: 80px;
+}
+
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.5em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.section-rule {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  margin: 0 auto 28px;
+}
+
+/* TEAM MEMBER BLOCK */
+.team-member {
+  margin-bottom: 56px;
+}
+
+/* ── PHOTO PLACEHOLDER ──
+   Replace src="" with an actual photo path or URL.
+   Recommended: square crop, min 300×300px, face centered.
+   Example: src="photos/awn.jpg"
+*/
+.member-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-dim);
+  margin: 0 auto 18px;
+  object-fit: cover;
+  display: block;
+  background: #111;
+  box-shadow: 0 0 30px rgba(201,168,76,0.2);
+  /* PLACEHOLDER: replace the div below with an <img> tag once you have photos */
+}
+
+/* Placeholder circle shown when no photo */
+.photo-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold-dim);
+  background: radial-gradient(circle at 40% 35%, #1a1500, #000);
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(201,168,76,0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.photo-placeholder::before {
+  content: attr(data-initials);
+  font-family: 'Cinzel', serif;
+  font-size: 32px;
+  color: var(--gold-dim);
+  letter-spacing: 0.05em;
+}
+
+.photo-placeholder:has(img)::before {
+  display: none;
+}
+
+.photo-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, rgba(201,168,76,0.1), transparent 60%);
+}
+
+.member-name {
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.member-role {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.member-dept {
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+/* STAT BLOCK — tech numbers */
+.stat-row {
+  display: inline-flex;
+  gap: 80px;
+  margin-bottom: 48px;
+  border-top: 1px solid var(--gold-dim);
+  border-bottom: 1px solid var(--gold-dim);
+  padding: 24px 60px;
+}
+
+.stat-item { text-align: center; }
+
+.stat-number {
+  font-family: 'Cinzel', serif;
+  font-size: 36px;
+  color: var(--gold-light);
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* TECH STACK BLOCK */
+.tech-grid {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  justify-content: center;
+  max-width: 700px;
+  margin-bottom: 48px;
+}
+
+.tech-pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  border: 1px solid var(--gold-dim);
+  border-radius: 100px;
+  padding: 6px 18px;
+}
+
+/* QUOTE BLOCK */
+.credits-quote {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--gold-light);
+  font-style: italic;
+  letter-spacing: 0.08em;
+  max-width: 800px;
+  margin: 0 auto 12px;
+  line-height: 1.7;
+}
+
+.credits-quote-attr {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.3em;
+}
+
+/* SUPERVISOR */
+.supervisor-name {
+  font-family: 'Cinzel', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 0.15em;
+}
+
+/* UNIVERSITY LOGO PLACEHOLDER
+   ── Replace the .uni-logo-placeholder div with:
+      <img src="university-logo.png" class="uni-logo" alt="National University Sudan">
+   Recommended: white/gold PNG on transparent bg, ~300px wide
+*/
+.uni-logo-placeholder {
+  width: 240px;
+  height: 100px;
+  margin: 0 auto 20px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201,168,76,0.04);
+  overflow: hidden;
+  padding: 10px;
+}
+
+.uni-logo-placeholder img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.uni-logo-placeholder span {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--gold-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.uni-name {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  letter-spacing: 0.2em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.uni-sub {
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+/* BIG FINAL DEDICATION */
+.dedication {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--dim);
+  letter-spacing: 0.25em;
+  line-height: 2;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* FINAL LOGO lockup */
+.final-logo {
+  margin: 60px auto 0;
+}
+
+.final-bayan {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  text-shadow: 0 0 60px rgba(201,168,76,0.5);
+  margin-bottom: 12px;
+}
+
+.final-year {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.5em;
+  color: var(--gold-dim);
+}
+
+/* Top/bottom vignette fade */
+#vignette-top {
+  position: fixed; top: 0; left: 0; right: 0; height: 200px;
+  background: linear-gradient(to bottom, #000 0%, transparent 100%);
+  z-index: 50; pointer-events: none;
+}
+#vignette-bottom {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 200px;
+  background: linear-gradient(to top, #000 0%, transparent 100%);
+  z-index: 50; pointer-events: none;
+}
+
+/* ══════════════════════════════
+   QUESTIONS FINALE
+   Appears after credits (35s + 3.5s = 38.5s)
+   Starts at 39s
+══════════════════════════════ */
+#questions-block {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 84px;
+  font-weight: 700;
+  color: var(--gold-light);
+  opacity: 0;
+  text-align: center;
+  letter-spacing: 0.1em;
+  z-index: 100;
+  animation: questions-enter 4s 39s cubic-bezier(0.16,1,0.3,1) forwards;
+  text-shadow: 0 0 20px rgba(0,0,0,1);
+}
+
+@keyframes questions-enter {
+  0% { 
+    opacity: 0; 
+    transform: translate(-50%, -48%) scale(0.92); 
+    filter: blur(8px);
+    letter-spacing: 0.1em;
+  }
+  40% { 
+    opacity: 1; 
+    filter: blur(0);
+  }
+  100% { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1); 
+    letter-spacing: 0.25em;
+    text-shadow: 0 0 60px var(--gold-glow), 0 0 120px rgba(201,168,76,0.1);
+  }
+}
+
+/* ══════════════════════════════
+   ANIMATIONS
+══════════════════════════════ */
+@keyframes twinkle {
+  0%,100% { opacity: var(--min-op); transform: scale(1); }
+  50%      { opacity: var(--max-op); transform: scale(1.3); }
+}
+
+@keyframes sweep {
+  0%   { left:-30%; opacity:0; }
+  10%  { opacity:0.6; }
+  90%  { opacity:0.6; }
+  100% { left:100%; opacity:0; }
+}
+
+@keyframes title-enter {
+  from { opacity:0; transform: translate(-50%,-54%) scale(0.94); }
+  to   { opacity:1; transform: translate(-50%,-50%) scale(1); }
+}
+
+@keyframes fade-in-up {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity:0; }
+  to   { opacity:1; }
+}
+
+@keyframes rule-expand {
+  from { width:0; }
+  to   { width:400px; }
+}
+
+@keyframes credits-appear {
+  from { opacity:0; }
+  to   { opacity:1; }
+}
+
+@keyframes credits-roll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-100%); }
+}
+
+/* Title fades out as credits start */
+#title-block {
+  animation: title-enter 2s 0.5s cubic-bezier(0.16,1,0.3,1) forwards,
+             title-exit  1s 3s ease-in forwards;
+}
+
+@keyframes title-exit {
+  from { opacity:1; transform: translate(-50%,-50%) scale(1); }
+  to   { opacity:0; transform: translate(-50%,-52%) scale(0.97); }
+}
+</style>
+</head>
+<body>
+
+<!-- ── BACKGROUND ── -->
+<div id="bg"></div>
+<div id="light-sweep"></div>
+
+<!-- Vignettes -->
+<div id="vignette-top"></div>
+<div id="vignette-bottom"></div>
+
+<!-- ════════════════════════════
+     OPENING TITLE
+════════════════════════════ -->
+<div id="title-block">
+  <div class="title-eyebrow">NATIONAL UNIVERSITY – SUDAN · 2026</div>
+  <div class="title-main">BAYAN</div>
+  <div class="title-arabic">بيان · كلمة واضحة · صوت يُسمع</div>
+  <div class="title-rule"></div>
+  <div class="title-subtitle">An AI-Driven Bidirectional Arabic Sign Language Translation System</div>
+</div>
+
+<!-- ════════════════════════════
+     CREDITS SCROLL
+════════════════════════════ -->
+<div id="credits-wrapper">
+<div id="credits-track">
+
+  <!-- ── SPACER so first line appears from bottom ── -->
+
+
+  <!-- ────────────────── THE TEAM ────────────────── -->
+  <div class="credits-section">
+    <div class="section-label">Presented by</div>
+    <div class="section-rule"></div>
+
+    <!-- MEMBER 1 — AWN -->
+    <div class="team-member">
+      <!--
+        PHOTO PLACEHOLDER — AWN
+        Replace this div with:
+        <img src="/awn.jpg" class="member-photo" alt="Awn Maaz">
+        Photo: square, face centered, min 300×300px
+      -->
+      <div class="photo-placeholder" data-initials="AM">
+        <img src="awn.jpg" class="member-photo" alt="Awn Maaz">
+      </div>
+      <div class="member-name">Awn Maaz S. Rudwan</div>
+      <div class="member-role">Lead Engineer · ML & Backend Architecture</div>
+      <div class="member-role">Avatar Rendering</div>
+      <div class="member-dept">Bachelor of Computer Science</div>
+    </div>
+
+    <!-- MEMBER 2 — MARIAM -->
+    <div class="team-member">
+      <!--
+        PHOTO PLACEHOLDER — MARIAM
+        Replace this div with:
+        <img src="awn.jpg" class="member-photo" alt="Mariam Mohamed">
+      -->
+      <div class="photo-placeholder" data-initials="MM">
+        <img src="mariam.jpg" class="member-photo" alt="Mariam Mohamed">
+      </div>
+      <div class="member-name">Mariam Mohamed Seidahmed</div>
+      <div class="member-role">Mobile Design & UI/UX</div>
+      <div class="member-dept">Bachelor of Information Technology</div>
+    </div>
+
+    <!-- MEMBER 3 — AMEN -->
+    <div class="team-member">
+      <!--
+        PHOTO PLACEHOLDER — AMEN
+        Replace with: <img src="awn.jpg" class="member-photo" alt="Amen Aladien">
+      -->
+      <div class="photo-placeholder" data-initials="AA">
+        <img src="amen.jpg" class="member-photo" alt="Amen Aladien">
+      </div>
+      <div class="member-name">Amen Aladien Makki</div>
+      <div class="member-role">NLP Pipeline & API Integration</div>
+      <div class="member-dept">Bachelor of Information Technology</div>
+    </div>
+
+    <!-- MEMBER 4 — MAHMOUD -->
+    <div class="team-member">
+      <!--
+        PHOTO PLACEHOLDER — MAHMOUD
+        Replace with: <img src="awn.jpg" class="member-photo" alt="Mahmoud Tayseer">
+      -->
+      <div class="photo-placeholder" data-initials="MT">
+        <img src="mahmoud.jpg" class="member-photo" alt="Mahmoud Tayseer">
+      </div>
+      <div class="member-name">Mahmoud Tayseer Abdulati</div>
+      <div class="member-role">Educational Module</div>
+      <div class="member-dept">Bachelor of Information Technology</div>
+    </div>
+  </div>
+
+  <!-- ────────────────── SUPERVISOR ────────────────── -->
+  <div class="credits-section">
+    <div class="section-label">Under the Supervision of</div>
+    <div class="section-rule"></div>
+    <!--
+      PHOTO PLACEHOLDER — SUPERVISOR
+      Optionally add: <img src="awn.jpg" class="member-photo" alt="Us. Basil Alwali">
+      Or remove the placeholder entirely if you prefer text-only
+    -->
+    <div class="photo-placeholder" data-initials="BA" style="width:90px;height:90px;font-size:22px;">
+      <img src="awn.jpg" class="member-photo" alt="Us. Basil Alwali">
+    </div>
+    <div class="supervisor-name">Us. Basil Alwali</div>
+    <div class="member-role" style="margin-top:8px">Faculty Supervisor</div>
+    <div class="member-dept">Faculty of Computer Science & Information Technology</div>
+  </div>
+
+  <!-- ────────────────── THE NUMBERS ────────────────── -->
+  <div class="credits-section">
+    <div class="section-label">By The Numbers</div>
+    <div class="section-rule"></div>
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-number">502</div>
+        <div class="stat-label">ArSL Signs<br>in Dataset</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">75K+</div>
+        <div class="stat-label">Training<br>Instances</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">20</div>
+        <div class="stat-label">Daily-Use<br>Signs Modeled</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">108</div>
+        <div class="stat-label">Keypoint<br>Features/Frame</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">&lt;1.5s</div>
+        <div class="stat-label">End-to-End<br>Latency Target</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────── TECH STACK ────────────────── -->
+  <div class="credits-section">
+    <div class="section-label">Built With</div>
+    <div class="section-rule"></div>
+    <div class="tech-grid">
+      <div class="tech-pill">Flutter</div>
+      <div class="tech-pill">FastAPI</div>
+      <div class="tech-pill">TensorFlow Lite</div>
+      <div class="tech-pill">MediaPipe</div>
+      <div class="tech-pill">BiLSTM + Transformer</div>
+      <div class="tech-pill">LLaMA 3 via Groq</div>
+      <div class="tech-pill">KArSL-502 Dataset</div>
+      <div class="tech-pill">SM-2 Spaced Repetition</div>
+      <div class="tech-pill">SLERP Coarticulation</div>
+      <div class="tech-pill">Google Colab Pro · T4 GPU</div>
+    </div>
+  </div>
+
+  <!-- ────────────────── QUOTE ────────────────── -->
+  <div class="credits-section">
+    <div class="section-rule"></div>
+    <div class="credits-quote">
+      "Every voice deserves the clarity and eloquence it deserves."
+    </div>
+    <div class="credits-quote-attr" style="margin-top:16px">— Bayan, 2026</div>
+    <div class="section-rule" style="margin-top:28px"></div>
+  </div>
+
+  <!-- ────────────────── DATASET CREDIT ────────────────── -->
+  <div class="credits-section">
+    <div class="section-label">Dataset</div>
+    <div class="section-rule"></div>
+    <div class="supervisor-name" style="font-size:18px; letter-spacing:0.2em">KArSL · Kinect Arabic Sign Language</div>
+    <div class="member-role" style="margin-top:10px">Sidig, Luqman, Mahmoud & Mohandes · 2021</div>
+    <div class="member-dept" style="margin-top:4px">ACM Transactions on Asian and Low-Resource Language Information Processing</div>
+  </div>
+
+  <!-- ────────────────── UNIVERSITY ────────────────── -->
+  <div class="credits-section">
+    <div class="section-label">Presented to</div>
+    <div class="section-rule"></div>
+    <!--
+      UNIVERSITY LOGO PLACEHOLDER
+      Replace the .uni-logo-placeholder div with:
+      <img src="university-logo.png" style="width:240px; margin:0 auto 20px; display:block;" alt="National University Sudan">
+      Recommended: PNG with transparent background, white or gold version
+    -->
+    <div class="uni-logo-placeholder">
+      <img src="university-logo.png" alt="National University Sudan">
+    </div>
+    <div class="uni-name">National University – Sudan</div>
+    <div class="uni-sub">Faculty of Computer Science and Information Technology</div>
+    <div class="uni-sub" style="margin-top:6px">Bachelor of Science · Computer Science & Information Technology</div>
+    <div class="uni-sub" style="margin-top:6px; color: var(--gold-dim)">March 2026</div>
+  </div>
+
+  <!-- ────────────────── DEDICATION ────────────────── -->
+  <div class="credits-section">
+    <div class="section-rule"></div>
+    <div class="dedication">
+      DEDICATED TO THE DEAF AND HARD-OF-HEARING COMMUNITY<br>
+      OF SUDAN AND THE ARAB WORLD.<br><br>
+      YOUR RESILIENCE INSPIRED EVERY LINE OF CODE.<br>
+      MAY BAYAN CARRY YOUR WORDS WITH DIGNITY.
+    </div>
+    <div class="section-rule" style="margin-top:40px"></div>
+  </div>
+
+  <!-- ────────────────── FINAL LOGO ────────────────── -->
+  <div class="final-logo">
+    <div class="final-bayan">BAYAN</div>
+    <div class="final-year">· 2026 · بيان ·</div>
+  </div>
+
+  <!-- Trailing space -->
+  <div style="height: 600px"></div>
+
+</div><!-- end credits-track -->
+</div><!-- end credits-wrapper -->
+
+<!-- ── QUESTIONS FINALE ── -->
+<div id="questions-block">Questions?</div>
+
+<script>
+/* ── Generate starfield ── */
+const bg = document.getElementById('bg');
+for (let i = 0; i < 220; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  const minOp = (Math.random() * 0.2 + 0.05).toFixed(2);
+  const maxOp = (Math.random() * 0.5 + 0.3).toFixed(2);
+  s.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%;
+    top:${Math.random()*100}%;
+    --d:${(Math.random()*4+2).toFixed(1)}s;
+    --delay:-${(Math.random()*6).toFixed(1)}s;
+    --min-op:${minOp};
+    --max-op:${maxOp};
+  `;
+  bg.appendChild(s);
+}
+</script>
+</body>
+</html>
